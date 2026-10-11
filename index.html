@@ -1,0 +1,232 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basic Chatbot</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:#f8fafc;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:15px
+}
+.chat-container{
+  width:100%;
+  max-width:650px;
+  height:85vh;
+  max-height:750px;
+  background:#1e293b;
+  border:1px solid #334155;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 15px 40px #0005
+}
+header{
+  padding:20px;
+  background:#172554;
+  border-bottom:1px solid #334155
+}
+header h1{margin:0;color:#7dd3fc;font-size:24px}
+header p{margin:7px 0 0;color:#cbd5e1;font-size:14px}
+#chat-box{
+  flex:1;
+  overflow-y:auto;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px
+}
+.message{
+  max-width:85%;
+  padding:12px 15px;
+  border-radius:14px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap
+}
+.bot{
+  align-self:flex-start;
+  background:#334155;
+  border-bottom-left-radius:4px
+}
+.user{
+  align-self:flex-end;
+  background:#0369a1;
+  border-bottom-right-radius:4px
+}
+form{
+  display:flex;
+  gap:10px;
+  padding:15px;
+  background:#111827;
+  border-top:1px solid #334155
+}
+input{
+  flex:1;
+  min-width:0;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #475569;
+  background:#0f172a;
+  color:white;
+  font-size:15px;
+  outline:none
+}
+input:focus{border-color:#38bdf8}
+button{
+  border:none;
+  border-radius:10px;
+  padding:12px 17px;
+  background:#0284c7;
+  color:white;
+  font-weight:bold;
+  cursor:pointer
+}
+button:hover{background:#0369a1}
+.actions{padding:0 15px 15px;background:#111827}
+#clear{
+  background:#475569;
+  padding:9px 13px;
+  font-size:12px
+}
+footer{
+  text-align:center;
+  color:#94a3b8;
+  font-size:12px;
+  padding:10px
+}
+</style>
+</head>
+
+<body>
+<div class="chat-container">
+  <header>
+    <h1>🤖 ChatBuddy</h1>
+    <p>Your friendly rule-based assistant · Online</p>
+  </header>
+
+  <div id="chat-box" aria-live="polite">
+    <div class="message bot">
+      Hi there! 👋 I'm ChatBuddy.
+
+      You can ask me about myself, time, date, programming, or say hello!
+    </div>
+  </div>
+
+  <form id="chat-form">
+    <input id="user-input" type="text"
+      placeholder="Type your message..."
+      aria-label="Your message"
+      maxlength="500" autocomplete="off" required>
+    <button type="submit">Send ➤</button>
+  </form>
+
+  <div class="actions">
+    <button id="clear" type="button">🗑️ Clear Chat</button>
+  </div>
+
+  <footer>ChatBuddy · A beginner-friendly chatbot project</footer>
+</div>
+
+<script>
+const form = document.getElementById("chat-form");
+const input = document.getElementById("user-input");
+const chatBox = document.getElementById("chat-box");
+const clearButton = document.getElementById("clear");
+
+function addMessage(text, sender) {
+  const message = document.createElement("div");
+  message.className = "message " + sender;
+  message.textContent = text;
+  chatBox.appendChild(message);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function getBotResponse(message) {
+  const text = message.toLowerCase().trim();
+
+  if (/^(hi|hello|hey|hii|hlo)\b/.test(text))
+    return "Hello! 😊 Nice to meet you. How can I help you today?";
+
+  if (text.includes("your name") || text.includes("who are you"))
+    return "I'm ChatBuddy 🤖, a simple rule-based chatbot built with HTML, CSS, and JavaScript.";
+
+  if (text.includes("how are you"))
+    return "I'm doing great! 😄 Thanks for asking. How are you?";
+
+  if (text.includes("your creator") || text.includes("who made you"))
+    return "I'm a beginner-friendly chatbot project created to demonstrate basic conversational programming.";
+
+  if (text.includes("time"))
+    return "Your device's current time is " +
+      new Date().toLocaleTimeString() + " ⏰";
+
+  if (text.includes("date") || text.includes("today"))
+    return "Today's date is " +
+      new Date().toLocaleDateString() + " 📅";
+
+  if (text.includes("python"))
+    return "Python is a popular programming language used in automation, web development, data analysis, and AI. 🐍";
+
+  if (text.includes("javascript"))
+    return "JavaScript makes websites interactive and powers my chatbot responses! 💻";
+
+  if (text.includes("html"))
+    return "HTML structures the content of a webpage, while CSS styles it. 🌐";
+
+  if (text.includes("css"))
+    return "CSS controls the design, colors, spacing, and layout of webpages. 🎨";
+
+  if (text.includes("help"))
+    return "Try asking me:\n• Hello\n• What is your name?\n• How are you?\n• What is Python?\n• What is JavaScript?\n• What is the date today?\n• What time is it?";
+
+  if (/\b(thank you|thanks|thank u)\b/.test(text))
+    return "You're welcome! ❤️ Happy to help.";
+
+  if (/\b(bye|goodbye)\b/.test(text))
+    return "Goodbye! 👋 Have a wonderful day.";
+
+  if (/\b(joke|funny)\b/.test(text))
+    return "Why do programmers prefer dark mode? Because light attracts bugs! 😂";
+
+  if (/\b(what is|explain|define)\b/.test(text))
+    return "I can answer a few basic questions, but I don't know everything yet. Try asking about Python, JavaScript, HTML, or CSS. Type 'help' to see examples.";
+
+  return "I'm not sure how to answer that yet. 🤔 Try saying hello or type 'help' to see what I can do.";
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  addMessage(message, "user");
+  input.value = "";
+  input.focus();
+
+  setTimeout(function() {
+    addMessage(getBotResponse(message), "bot");
+  }, 300);
+});
+
+clearButton.addEventListener("click", function() {
+  chatBox.innerHTML = "";
+  addMessage("Chat cleared! 🧹 Hi again! How can I help you?", "bot");
+  input.focus();
+});
+</script>
+</body>
+</html>
+```
